@@ -1,30 +1,73 @@
 {
   "name": "eu-tours-rest",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "description": "Backend server for booking tours around the world.",
+  "author": "Marko Anic",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
+    "dev": "nest start --watch",
     "build": "nest build",
+    "start": "node dist/main",
+    "typeorm": "ts-node ./node_modules/typeorm/cli",
+    "typeorm:create-migration": "npm run typeorm migration:create ./migrations/$npm_config_name",
+    "typeorm:generate-migration": "npm run typeorm -- -d ./src/base/database/database.config.ts migration:generate ./migrations/$npm_config_name",
+    "typeorm:run-migrations": "npm run typeorm migration:run -d ./src/base/database/database.config.ts",
+    "typeorm:revert-migration": "npm run typeorm -d ./src/base/database/database.config.ts migration:revert",
+    "typecheck": "tsc",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "nest start",
-    "start:dev": "nest start --watch",
-    "start:debug": "nest start --debug --watch",
-    "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json --detectOpenHandles",
+    "ci:format": "prettier --check \"{src,apps,libs,test}/**/*.ts\"",
+    "ci:lint": "eslint \"{src,apps,libs,test}/**/*.ts\"",
+    "ci:test": "jest --ci --coverage && jest --config ./test/jest-e2e.json --ci --coverage --detectOpenHandles"
   },
   "dependencies": {
+    "@hapi/joi": "^17.1.1",
+    "@nestjs/bull": "^10.1.0",
     "@nestjs/common": "^10.0.0",
+    "@nestjs/config": "^3.2.0",
     "@nestjs/core": "^10.0.0",
+    "@nestjs/jwt": "^10.2.0",
+    "@nestjs/mapped-types": "^2.0.5",
     "@nestjs/platform-express": "^10.0.0",
+    "@nestjs/swagger": "^7.3.0",
+    "@nestjs/terminus": "^10.2.2",
+    "@nestjs/throttler": "^5.1.2",
+    "@nestjs/typeorm": "^10.0.2",
+    "@sendgrid/mail": "^8.1.0",
+    "@types/bcrypt": "^5.0.2",
+    "@types/cookie-parser": "^1.4.6",
+    "@types/hapi__joi": "^17.1.14",
+    "@types/jsonwebtoken": "^9.0.5",
+    "@types/multer": "^1.4.11",
+    "@types/nodemailer": "^6.4.14",
+    "@types/passport-jwt": "^4.0.1",
+    "@types/uuid": "^9.0.8",
+    "@willsoto/nestjs-prometheus": "^6.0.0",
+    "bcrypt": "^5.1.1",
+    "bull": "^4.12.2",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.1",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "helmet": "^7.1.0",
+    "image-size": "^1.1.1",
+    "jsonwebtoken": "^9.0.2",
+    "nodemailer": "^6.9.9",
+    "passport": "^0.7.0",
+    "passport-jwt": "^4.0.1",
+    "pg": "^8.11.3",
+    "prom-client": "^15.1.0",
     "reflect-metadata": "^0.1.13",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "typeorm": "^0.3.20",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",
@@ -55,7 +98,10 @@
       "json",
       "ts"
     ],
-    "rootDir": "src",
+    "rootDir": "./src",
+    "modulePaths": [
+      "<rootDir>"
+    ],
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
@@ -63,7 +109,17 @@
     "collectCoverageFrom": [
       "**/*.(t|j)s"
     ],
-    "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "coverageDirectory": "./../coverage",
+    "testEnvironment": "node",
+    "moduleNameMapper": {
+      "^@/(.*)$": "<rootDir>/$1",
+      "^@Base/(.*)$": "<rootDir>/base/$1",
+      "^@Database/(.*)$": "<rootDir>/base/database/$1",
+      "^@Health/(.*)$": "<rootDir>/base/health/$1",
+      "^@RateLimiter/(.*)$": "<rootDir>/base/rate-limiter/$1",
+      "^@Core/(.*)$": "<rootDir>/core/$1",
+      "^@Utils/(.*)$": "<rootDir>/utils/$1",
+      "^@Tasks/(.*)$": "<rootDir>/tasks/$1"
+    }
   }
 }

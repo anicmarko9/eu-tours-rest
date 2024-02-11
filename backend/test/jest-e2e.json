@@ -1,9 +1,22 @@
 {
   "moduleFileExtensions": ["js", "json", "ts"],
-  "rootDir": ".",
+  "rootDir": "./../",
+  "modulePaths": ["<rootDir>"],
   "testEnvironment": "node",
   "testRegex": ".e2e-spec.ts$",
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
+  },
+  "collectCoverageFrom": ["test/**/*.(t|j)s"],
+  "coverageDirectory": "./test/coverage",
+  "moduleNameMapper": {
+    "^@/(.*)$": "<rootDir>src/$1",
+    "^@Base/(.*)$": "<rootDir>src/base/$1",
+    "^@Database/(.*)$": "<rootDir>src/base/database/$1",
+    "^@Health/(.*)$": "<rootDir>src/base/health/$1",
+    "^@RateLimiter/(.*)$": "<rootDir>src/base/rate-limiter/$1",
+    "^@Core/(.*)$": "<rootDir>src/core/$1",
+    "^@Utils/(.*)$": "<rootDir>src/utils/$1",
+    "^@Tasks/(.*)$": "<rootDir>src/tasks/$1"
   }
 }
