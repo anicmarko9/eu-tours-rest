@@ -2,6 +2,11 @@
 /dist
 /node_modules
 
+# Versioning and metadata
+.git
+.gitignore
+.dockerignore
+
 # Logs
 logs
 *.log
@@ -40,3 +45,8 @@ lerna-debug.log*
 test/coverage/
 cdk.out
 cdk.context.json
+Dockerfile.dev
+Dockerfile
+docker-compose.dev.yml
+docker-compose.yml
+README.md

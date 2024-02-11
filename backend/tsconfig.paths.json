@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./src/",
+    "paths": {
+      "@/*": ["*"],
+      "@Base/*": ["base/*"],
+      "@Database/*": ["base/database/*"],
+      "@Health/*": ["base/health/*"],
+      "@RateLimiter/*": ["base/rate-limiter/*"],
+      "@Core/*": ["core/*"],
+      "@Utils/*": ["utils/*"],
+      "@Tasks/*": ["tasks/*"]
+    }
+  }
+}
