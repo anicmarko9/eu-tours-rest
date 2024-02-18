@@ -1,0 +1,84 @@
+version: '3'
+name: backend
+# This file is mostly used for frontend developers to start PostgreSQL, Redis, and Backend on their local machine without downloading each tool.
+# Download Docker Desktop first, and after that type this in your terminal from VS Code: `docker-compose up -d`.
+# When you are done coding, shut everything down by typing this in your terminal from VS Code: `docker-compose down`.
+
+# All 4 services communicate on the same network called "local"
+networks:
+  local:
+    name: local
+
+services:
+  # You don't need to install database on your local PC, just run this docker-compose file and you can acceess DB inside of Docker Desktop.
+  postgres:
+    container_name: PostgreSQL
+    restart: on-failure
+    image: postgres:16.2-alpine
+    ports:
+      - '5432:5432'
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=qwerty123
+      - POSTGRES_DB=eu_tours_db
+    volumes:
+      - eu_tours_postgres:/var/lib/postgresql/data
+    networks:
+      - backend
+
+  # pgAdmin 4 can be used as a UI tool for the database. You can open it at port 80 in your browser, and login with "environment" email and password.
+  # I don't use this, but some people prefer it
+  pgadmin4:
+    container_name: pgAdmin4
+    restart: on-failure
+    image: dpage/pgadmin4:8.3
+    ports:
+      - 80:80
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=test@email.com
+      - PGADMIN_DEFAULT_PASSWORD=qwerty123
+    depends_on:
+      - postgres
+    networks:
+      - local
+
+  # You'll need Redis for typical async tasks, like sending emails, etc.
+  redis:
+    container_name: Redis
+    image: redis:7.2.4-alpine
+    restart: on-failure
+    ports:
+      - 6379:6379
+    volumes:
+      - eu_tours_redis:/data
+    networks:
+      - local
+
+  # This is backend server running on Node.js - it waits for PostgreSQL and Redis to load first.
+  backend:
+    container_name: Nest.js
+    restart: on-failure
+    build:
+      context: backend
+      dockerfile: Dockerfile.dev
+    image: 'backend:dev-1.0'
+    env_file:
+      - .env
+    ports:
+      - 5000:5000
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - local
+
+volumes:
+  # Volume for PostgreSQL database, you can find it under "Volumes" tab in Docker Desktop.
+  eu_tours_postgres:
+    name: eu_tours_postgres
+    driver: local
+
+  # Volume for Redis database, you can find it under "Volumes" tab in Docker Desktop.
+  eu_tours_redis:
+    name: eu_tours_redis
+    driver: local
