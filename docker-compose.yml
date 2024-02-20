@@ -1,3 +1,4 @@
+# Before running `docker-compose up -d`, make sure you create `.env` file in the root directory and put all backend secrets in it.
 version: '3'
 name: backend
 # This file is mostly used for frontend developers to start PostgreSQL, Redis, and Backend on their local machine without downloading each tool.
@@ -24,7 +25,7 @@ services:
     volumes:
       - eu_tours_postgres:/var/lib/postgresql/data
     networks:
-      - backend
+      - local
 
   # pgAdmin 4 can be used as a UI tool for the database. You can open it at port 80 in your browser, and login with "environment" email and password.
   # I don't use this, but some people prefer it
